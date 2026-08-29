@@ -1,0 +1,20 @@
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="logo-gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6366f1" />
+      <stop offset="1" stop-color="#ec4899" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Money Bag Body -->
+  <path d="M20 12.5C20 12.5 17 9 12 9C7 9 5 13 5 13C5 13 3 13 3 22C3 31 8 36 20 36C32 36 37 31 37 22C37 13 35 13 35 13C35 13 33 9 28 9C23 9 20 12.5 20 12.5Z" fill="url(#logo-gradient)" />
+  
+  <!-- Ruffled Top Details -->
+  <path d="M12 9C11 6.5 13 4.5 16 4.5C18 4.5 19 5.5 20 6.5C21 5.5 22 4.5 24 4.5C27 4.5 29 6.5 28 9" fill="url(#logo-gradient)" opacity="0.8" />
+  
+  <!-- Ribbon/Tie -->
+  <path d="M10 13C12 13.5 16 14 20 14C24 14 28 13.5 30 13" stroke="white" stroke-width="1" stroke-opacity="0.3" stroke-linecap="round" />
+  
+  <!-- Dollar Sign -->
+  <text x="20" y="27" font-family="'Outfit', sans-serif" font-size="14" fill="white" text-anchor="middle" font-weight="900" style="filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2))">$</text>
+</svg>
