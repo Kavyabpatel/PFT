@@ -17,6 +17,15 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (email, password) => {
         const { data } = await api.post('/auth/login', { email, password });
+        if (!data.requires2FA) {
+            setUser(data);
+            localStorage.setItem('user', JSON.stringify(data));
+        }
+        return data;
+    };
+
+    const verifyLoginOTP = async (email, otpCode) => {
+        const { data } = await api.post('/auth/verify-login-otp', { email, otpCode });
         setUser(data);
         localStorage.setItem('user', JSON.stringify(data));
         return data;
@@ -41,7 +50,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, loading, login, register, logout, updateUser }}>
+        <AuthContext.Provider value={{ user, loading, login, verifyLoginOTP, register, logout, updateUser }}>
             {children}
         </AuthContext.Provider>
     );

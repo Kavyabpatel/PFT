@@ -31,7 +31,7 @@ const DashboardCard = ({ title, amount, icon, color, type }) => {
             <div>
                 <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '4px' }}>{title}</p>
                 <h2 style={{ fontSize: '28px', fontWeight: '800' }}>
-                    ${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    {amount}
                 </h2>
                 <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '8px' }}>
                     Compared to last month

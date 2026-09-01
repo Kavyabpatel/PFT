@@ -11,7 +11,6 @@ export const ThemeProvider = ({ children }) => {
             if (saved !== null) {
                 return JSON.parse(saved);
             }
-            // Fallback to natively detect user's system preference
             if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
                 return true;
             }
@@ -24,13 +23,14 @@ export const ThemeProvider = ({ children }) => {
     useEffect(() => {
         localStorage.setItem('darkMode', JSON.stringify(darkMode));
         
-        // Add a class specifically to transition background smoothly so page doesn't jarringly flash
         document.body.style.transition = 'background-color 0.4s ease, color 0.4s ease';
 
         if (darkMode) {
             document.documentElement.classList.add('dark-mode');
+            document.body.classList.add('dark-mode');
         } else {
             document.documentElement.classList.remove('dark-mode');
+            document.body.classList.remove('dark-mode');
         }
     }, [darkMode]);
 

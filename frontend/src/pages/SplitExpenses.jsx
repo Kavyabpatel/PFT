@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import Navbar from '../components/Navbar';
 import api from '../services/api';
-import { Users, UserPlus, Receipt, ArrowUpRight, ArrowDownLeft, Loader2, CheckCircle2 } from 'lucide-react';
+import { Users, UserPlus, Receipt, ArrowUpRight, ArrowDownLeft, Loader2, CheckCircle2, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useCurrency } from '../context/CurrencyContext';
 
 const SplitExpenses = () => {
+    const navigate = useNavigate();
     const { user: currentUser } = useAuth();
     const { formatAmount } = useCurrency();
     const [groups, setGroups] = useState([]);
@@ -93,14 +95,32 @@ const SplitExpenses = () => {
     return (
         <div className="dashboard-container">
             <Sidebar />
-            <main className="main-content">
-                <Navbar />
+            <main className="main-content" style={{ paddingTop: '32px' }}>
 
                 <div className="flex-between" style={{ marginBottom: '32px', animation: 'fadeIn 0.5s ease' }}>
                     <div>
-                        <h1 style={{ fontSize: '32px', fontWeight: '800', marginBottom: '8px', color: 'var(--text-main)', background: 'linear-gradient(135deg, var(--primary), var(--secondary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                            Split Expenses
-                        </h1>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+                            <button
+                                onClick={() => navigate(-1)}
+                                style={{
+                                    background: 'var(--glass-bg)',
+                                    border: '1px solid var(--glass-border)',
+                                    color: 'var(--text-main)',
+                                    padding: '8px',
+                                    borderRadius: '10px',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                                title="Go Back"
+                            >
+                                <ArrowLeft size={18} />
+                            </button>
+                            <h1 style={{ fontSize: '32px', fontWeight: '800', margin: 0, color: 'var(--text-main)', background: 'linear-gradient(135deg, var(--primary), var(--secondary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                                Split Expenses
+                            </h1>
+                        </div>
                         <p style={{ color: 'var(--text-muted)' }}>Manage shared bills and effortlessly track group balances.</p>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import Navbar from '../components/Navbar';
 import api from '../services/api';
@@ -9,7 +10,8 @@ import {
     Download,
     Shield,
     PieChart,
-    FileSpreadsheet
+    FileSpreadsheet,
+    ArrowLeft
 } from 'lucide-react';
 import {
     Chart as ChartJS,
@@ -159,30 +161,38 @@ const Reports = () => {
         return acc + (spent / b.budgetAmount);
     }, 0) / budgets.length : 0;
 
+    const navigate = useNavigate();
+
     return (
         <div className="dashboard-container">
             <Sidebar />
-            <main className="main-content">
-                <Navbar />
+            <main className="main-content" style={{ paddingTop: '32px' }}>
 
                 <div className="flex-between" style={{ marginBottom: '32px' }}>
                     <div>
-                        <h1 style={{ fontSize: '32px', fontWeight: '800', marginBottom: '8px', color: 'var(--text-main)' }}>Financial Reports</h1>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+                            <button
+                                onClick={() => navigate(-1)}
+                                style={{
+                                    background: 'var(--glass-bg)',
+                                    border: '1px solid var(--glass-border)',
+                                    color: 'var(--text-main)',
+                                    padding: '8px',
+                                    borderRadius: '10px',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                                title="Go Back"
+                            >
+                                <ArrowLeft size={18} />
+                            </button>
+                            <h1 style={{ fontSize: '32px', fontWeight: '800', margin: 0, color: 'var(--text-main)' }}>Financial Reports</h1>
+                        </div>
                         <p style={{ color: 'var(--text-muted)' }}>Analyzed breakdown of your economy.</p>
                     </div>
                     <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                        <button 
-                            className="header-icon-btn" 
-                            onClick={toggleDarkMode}
-                            title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
-                        >
-                            {darkMode ? <Sun size={20} /> : <Moon size={20} />}
-                        </button>
-                        <button className="header-icon-btn" title="Notifications">
-                            <Bell size={20} />
-                            <span className="notification-dot"></span>
-                        </button>
-
                         <button 
                             onClick={() => setIsModalOpen(true)}
                             className="btn-primary" 

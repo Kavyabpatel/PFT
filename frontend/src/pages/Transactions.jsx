@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import Sidebar from '../components/Sidebar';
 import Navbar from '../components/Navbar';
@@ -18,10 +19,13 @@ import {
     Wallet,
     Moon,
     Sun,
-    Bell
+    Bell,
+    ArrowLeft,
+    FileSpreadsheet
 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import AddTransactionModal from '../components/AddTransactionModal';
+import CSVImportModal from '../components/CSVImportModal';
 
 const Transactions = () => {
     const { darkMode, toggleDarkMode } = useTheme();
@@ -30,6 +34,7 @@ const Transactions = () => {
     const [filter, setFilter] = useState('all');
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isCSVModalOpen, setIsCSVModalOpen] = useState(false);
 
     const getTransactionIcon = (category) => {
         const iconStyle = {
@@ -109,29 +114,56 @@ const Transactions = () => {
         return matchesSearch && matchesFilter;
     });
 
+    const navigate = useNavigate();
+
     return (
         <div className="dashboard-container">
             <Sidebar />
 
-            <main className="main-content">
-                <Navbar />
+            <main className="main-content" style={{ paddingTop: '32px' }}>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '32px' }}>
                     <div>
-                        <h1 style={{ fontSize: '32px', fontWeight: '800', marginBottom: '8px' }}>Transactions History</h1>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '4px' }}>
+                            <button
+                                onClick={() => navigate(-1)}
+                                style={{
+                                    background: 'var(--glass-bg)',
+                                    border: '1px solid var(--glass-border)',
+                                    color: 'var(--text-main)',
+                                    padding: '8px',
+                                    borderRadius: '10px',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                                title="Go Back"
+                            >
+                                <ArrowLeft size={18} />
+                            </button>
+                            <h1 style={{ fontSize: '32px', fontWeight: '800', margin: 0 }}>Transactions History</h1>
+                        </div>
                         <p style={{ color: 'var(--text-muted)' }}>Real-time monitoring of your financial activities.</p>
                     </div>
                     <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                         <button 
-                            className="header-icon-btn" 
-                            onClick={toggleDarkMode}
-                            title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+                            onClick={() => setIsCSVModalOpen(true)}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                borderRadius: '12px',
+                                fontWeight: '600',
+                                border: '1px solid var(--glass-border)',
+                                background: 'var(--glass-bg)',
+                                color: 'var(--text-main)',
+                                cursor: 'pointer',
+                                padding: '0 18px',
+                                height: '44px'
+                            }}
                         >
-                            {darkMode ? <Sun size={20} /> : <Moon size={20} />}
-                        </button>
-                        <button className="header-icon-btn" title="Notifications">
-                            <Bell size={20} />
-                            <span className="notification-dot"></span>
+                            <FileSpreadsheet size={18} color="var(--primary)" /> Import Bank CSV
                         </button>
                         <button 
                             onClick={() => setIsModalOpen(true)}
@@ -273,6 +305,15 @@ const Transactions = () => {
                 isOpen={isModalOpen} 
                 onClose={() => setIsModalOpen(false)} 
                 onSuccess={fetchTransactions}
+            />
+
+            <CSVImportModal
+                isOpen={isCSVModalOpen}
+                onClose={() => setIsCSVModalOpen(false)}
+                onSuccess={(count) => {
+                    fetchTransactions();
+                    alert(`Successfully imported ${count} transactions!`);
+                }}
             />
         </div>
     );

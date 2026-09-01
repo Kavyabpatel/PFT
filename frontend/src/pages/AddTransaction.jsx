@@ -40,8 +40,7 @@ const AddTransaction = () => {
         <div className="dashboard-container">
             <Sidebar />
 
-            <main className="main-content">
-                <Navbar />
+            <main className="main-content" style={{ paddingTop: '32px' }}>
 
                 <div style={{ marginBottom: '32px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>

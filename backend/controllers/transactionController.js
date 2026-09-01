@@ -130,9 +130,52 @@ const deleteTransaction = async (req, res) => {
     }
 };
 
+// @desc    Bulk import transactions from CSV data
+// @route   POST /api/transactions/import-csv
+// @access  Private
+const importCSVTransactions = async (req, res) => {
+    const { items } = req.body;
+
+    if (!Array.isArray(items) || items.length === 0) {
+        return res.status(400).json({ message: 'No valid transaction items provided for import.' });
+    }
+
+    try {
+        const transactionsToInsert = items.map(item => ({
+            userId: req.user._id,
+            title: item.title || 'CSV Import',
+            amount: Math.abs(Number(item.amount)) || 0,
+            category: item.category || 'Others',
+            type: (item.type && item.type.toLowerCase() === 'income') ? 'income' : 'expense',
+            date: item.date ? new Date(item.date) : new Date(),
+            notes: item.notes || 'Imported via Bank CSV Importer'
+        }));
+
+        const inserted = await Transaction.insertMany(transactionsToInsert);
+
+        try {
+            await createNotification(
+                req.user._id,
+                `Successfully imported ${inserted.length} transactions from bank CSV.`,
+                'success'
+            );
+        } catch (e) {
+            console.warn('Notification failed during CSV import');
+        }
+
+        res.status(201).json({
+            message: `Successfully imported ${inserted.length} transactions`,
+            count: inserted.length
+        });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
 module.exports = {
     getTransactions,
     addTransaction,
     updateTransaction,
     deleteTransaction,
+    importCSVTransactions
 };
