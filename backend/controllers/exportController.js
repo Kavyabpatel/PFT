@@ -136,7 +136,7 @@ const exportExcel = async (req, res) => {
     }
 };
 
-// @desc    Export Pixel-Perfect Financial Statement PDF Matching User Screenshot
+// @desc    Export Dynamic Page-Count Optimized PDF Statement (No Blank Pages)
 // @route   GET /api/export/pdf
 // @access  Private
 const exportPDF = async (req, res) => {
@@ -144,7 +144,13 @@ const exportPDF = async (req, res) => {
         const userId = req.user._id;
         const transactions = await Transaction.find({ userId }).sort({ date: -1 });
 
-        const doc = new PDFDocument({ margin: 40, size: 'A4', bufferPages: true });
+        const doc = new PDFDocument({ 
+            margin: 40, 
+            size: 'A4', 
+            bufferPages: true,
+            autoFirstPage: true
+        });
+
         const filename = `PFT_Financial_Statement_${new Date().toISOString().slice(0, 10)}.pdf`;
         
         res.setHeader('Content-disposition', `attachment; filename="${filename}"`);
@@ -173,7 +179,6 @@ const exportPDF = async (req, res) => {
         const userName = req.user.name || 'Kavya Patel';
         const dateStr = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
 
-        // Format currency helper
         const formatCurrency = (amount) => `Rs. ${(Number(amount) || 0).toLocaleString('en-IN')}`;
 
         // --- 1. Letterhead ---
@@ -183,71 +188,69 @@ const exportPDF = async (req, res) => {
            .text('PFT', 40, 42, { characterSpacing: 2 });
 
         doc.fillColor(slate900)
-           .fontSize(28)
+           .fontSize(26)
            .font('Times-Roman')
            .text('Financial Statement', 40, 56);
 
         doc.fillColor(slate500)
-           .fontSize(10)
+           .fontSize(9.5)
            .font('Helvetica')
-           .text(`For the period ending ${dateStr}`, 40, 92);
+           .text(`For the period ending ${dateStr}`, 40, 90);
 
         doc.fillColor(slate500)
-           .fontSize(9.5)
+           .fontSize(9)
            .font('Helvetica')
            .text('Prepared for', 350, 45, { align: 'right' });
 
         doc.fillColor(slate800)
            .fontSize(11)
-           .font('Helvetica')
-           .text(userName, 350, 60, { align: 'right' });
+           .font('Helvetica-Bold')
+           .text(userName, 350, 58, { align: 'right' });
 
         doc.fillColor(slate500)
-           .fontSize(10)
+           .fontSize(9.5)
            .font('Helvetica')
-           .text(dateStr, 350, 78, { align: 'right' });
+           .text(dateStr, 350, 74, { align: 'right' });
 
         // Solid Letterhead Bottom Line
-        doc.moveTo(40, 115).lineTo(555, 115).lineWidth(1.5).stroke(slate800);
+        doc.moveTo(40, 110).lineTo(555, 110).lineWidth(1.5).stroke(slate800);
 
         // --- 2. Summary Table ---
-        let currentY = 145;
+        let currentY = 135;
 
         // TOTAL INCOME
-        doc.fillColor(slate500).fontSize(10).font('Helvetica').text('TOTAL INCOME', 40, currentY, { characterSpacing: 0.5 });
-        doc.fillColor(slate900).fontSize(14).font('Helvetica').text(formatCurrency(totalIncome), 350, currentY - 2, { align: 'right', width: 205 });
-        doc.moveTo(40, currentY + 20).lineTo(555, currentY + 20).lineWidth(0.5).stroke(slate200);
+        doc.fillColor(slate500).fontSize(9.5).font('Helvetica').text('TOTAL INCOME', 40, currentY, { characterSpacing: 0.5 });
+        doc.fillColor(slate900).fontSize(13).font('Helvetica-Bold').text(formatCurrency(totalIncome), 350, currentY - 2, { align: 'right', width: 205 });
+        doc.moveTo(40, currentY + 18).lineTo(555, currentY + 18).lineWidth(0.5).stroke(slate200);
 
         // TOTAL EXPENSE
-        currentY += 32;
-        doc.fillColor(slate500).fontSize(10).font('Helvetica').text('TOTAL EXPENSE', 40, currentY, { characterSpacing: 0.5 });
-        doc.fillColor(slate900).fontSize(14).font('Helvetica').text(`(${formatCurrency(totalExpense)})`, 350, currentY - 2, { align: 'right', width: 205 });
+        currentY += 28;
+        doc.fillColor(slate500).fontSize(9.5).font('Helvetica').text('TOTAL EXPENSE', 40, currentY, { characterSpacing: 0.5 });
+        doc.fillColor(slate900).fontSize(13).font('Helvetica-Bold').text(`(${formatCurrency(totalExpense)})`, 350, currentY - 2, { align: 'right', width: 205 });
         
-        // Mid-line under Total Expense (starts from x=300 to 555)
-        currentY += 22;
+        currentY += 20;
         doc.moveTo(300, currentY).lineTo(555, currentY).lineWidth(1.5).stroke(slate800);
 
         // NET BALANCE
-        currentY += 12;
-        doc.fillColor(slate900).fontSize(11).font('Helvetica-Bold').text('NET BALANCE', 40, currentY, { characterSpacing: 0.5 });
+        currentY += 10;
+        doc.fillColor(slate900).fontSize(10.5).font('Helvetica-Bold').text('NET BALANCE', 40, currentY, { characterSpacing: 0.5 });
         doc.fillColor(slate900)
-           .fontSize(20)
+           .fontSize(18)
            .font('Helvetica-Bold')
            .text(formatCurrency(netBalance), 350, currentY - 4, { align: 'right', width: 205 });
 
         // --- 3. Transaction History Table ---
-        currentY += 55;
+        currentY += 45;
         doc.fillColor(slate900)
-           .fontSize(11)
-           .font('Helvetica')
+           .fontSize(10.5)
+           .font('Helvetica-Bold')
            .text('TRANSACTION HISTORY', 40, currentY, { characterSpacing: 0.5 });
 
-        currentY += 20;
-        // Table Header Line
+        currentY += 16;
         doc.moveTo(40, currentY).lineTo(555, currentY).lineWidth(1.5).stroke(slate800);
 
         currentY += 8;
-        doc.fillColor(slate500).fontSize(10).font('Helvetica-Bold');
+        doc.fillColor(slate500).fontSize(9.5).font('Helvetica-Bold');
         doc.text('Date', 40, currentY);
         doc.text('Description', 140, currentY);
         doc.text('Category', 260, currentY);
@@ -257,58 +260,69 @@ const exportPDF = async (req, res) => {
         currentY += 16;
         doc.moveTo(40, currentY).lineTo(555, currentY).lineWidth(1.5).stroke(slate800);
 
-        let rowY = currentY + 10;
-        const rowHeight = 28;
+        let rowY = currentY + 8;
+        const rowHeight = 24;
+        const maxRowY = 720; // Safe height boundary before footer
 
-        transactions.forEach((t) => {
-            if (rowY + rowHeight > 760) {
-                doc.addPage();
-                rowY = 40;
+        const drawTableHeader = (y) => {
+            doc.fillColor(slate900).fontSize(10.5).font('Helvetica-Bold').text('TRANSACTION HISTORY (CONTINUED)', 40, y, { characterSpacing: 0.5 });
+            let headY = y + 16;
+            doc.moveTo(40, headY).lineTo(555, headY).lineWidth(1.5).stroke(slate800);
+            headY += 8;
+            doc.fillColor(slate500).fontSize(9.5).font('Helvetica-Bold');
+            doc.text('Date', 40, headY);
+            doc.text('Description', 140, headY);
+            doc.text('Category', 260, headY);
+            doc.text('Type', 360, headY);
+            doc.text('Amount', 450, headY, { width: 105, align: 'right' });
+            headY += 16;
+            doc.moveTo(40, headY).lineTo(555, headY).lineWidth(1.5).stroke(slate800);
+            return headY + 8;
+        };
 
-                doc.fillColor(slate900).fontSize(11).font('Helvetica').text('TRANSACTION HISTORY (CONTINUED)', 40, rowY, { characterSpacing: 0.5 });
-                rowY += 18;
-                doc.moveTo(40, rowY).lineTo(555, rowY).lineWidth(1.5).stroke(slate800);
-                rowY += 8;
-                doc.fillColor(slate500).fontSize(10).font('Helvetica-Bold');
-                doc.text('Date', 40, rowY);
-                doc.text('Description', 140, rowY);
-                doc.text('Category', 260, rowY);
-                doc.text('Type', 360, rowY);
-                doc.text('Amount', 450, rowY, { width: 105, align: 'right' });
-                rowY += 16;
-                doc.moveTo(40, rowY).lineTo(555, rowY).lineWidth(1.5).stroke(slate800);
-                rowY += 10;
-            }
+        if (transactions.length === 0) {
+            doc.fillColor(slate500).fontSize(9.5).font('Helvetica').text('No transactions recorded for this period.', 40, rowY + 10);
+        } else {
+            transactions.forEach((t) => {
+                if (rowY + rowHeight > maxRowY) {
+                    doc.addPage();
+                    rowY = drawTableHeader(40);
+                }
 
-            const formattedDate = new Date(t.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
-            const isInc = t.type && t.type.toLowerCase() === 'income';
-            const amt = Number(t.amount) || 0;
+                const formattedDate = new Date(t.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+                const isInc = t.type && t.type.toLowerCase() === 'income';
+                const amt = Number(t.amount) || 0;
 
-            doc.fillColor(slate800).fontSize(9.5).font('Helvetica');
-            doc.text(formattedDate, 40, rowY + 4);
-            doc.text((t.title || 'Untitled').substring(0, 24), 140, rowY + 4);
-            doc.text(t.category || 'General', 260, rowY + 4);
-            doc.text(isInc ? 'Income' : 'Expense', 360, rowY + 4);
+                doc.fillColor(slate800).fontSize(9).font('Helvetica');
+                doc.text(formattedDate, 40, rowY + 3);
+                doc.text((t.title || 'Untitled').substring(0, 24), 140, rowY + 3);
+                doc.text(t.category || 'General', 260, rowY + 3);
+                doc.text(isInc ? 'Income' : 'Expense', 360, rowY + 3);
 
-            const displayAmount = isInc ? formatCurrency(amt) : `(${formatCurrency(amt)})`;
-            doc.fillColor(slate900)
-               .font('Helvetica')
-               .text(displayAmount, 450, rowY + 4, { width: 105, align: 'right' });
+                const displayAmount = isInc ? formatCurrency(amt) : `(${formatCurrency(amt)})`;
+                doc.fillColor(slate900)
+                   .font('Helvetica-Bold')
+                   .text(displayAmount, 450, rowY + 3, { width: 105, align: 'right' });
 
-            rowY += rowHeight;
-            doc.moveTo(40, rowY - 6).lineTo(555, rowY - 6).lineWidth(0.5).stroke(slate200);
-        });
+                rowY += rowHeight;
+                doc.moveTo(40, rowY - 4).lineTo(555, rowY - 4).lineWidth(0.5).stroke(slate200);
+            });
+        }
 
-        // --- 4. Page Footer ---
+        // --- 4. Page Footer (Placed inside Y = 760 - 780 to prevent PDFKit auto-page triggers) ---
         const pages = doc.bufferedPageRange();
         for (let i = 0; i < pages.count; i++) {
             doc.switchToPage(i);
-            doc.moveTo(40, 800).lineTo(555, 800).lineWidth(0.5).stroke(slate200);
+            
+            // Footer separator line
+            doc.moveTo(40, 760).lineTo(555, 760).lineWidth(0.5).stroke(slate200);
+            
             doc.fontSize(8)
                .fillColor(slate400)
                .font('Helvetica')
-               .text('Generated by PFT — Personal Finance Tracker', 40, 808);
-            doc.text('Confidential', 350, 808, { align: 'right', width: 205 });
+               .text('Generated by PFT — Personal Finance Tracker', 40, 768);
+            
+            doc.text(`Page ${i + 1} of ${pages.count}`, 350, 768, { align: 'right', width: 205 });
         }
 
         doc.end();
