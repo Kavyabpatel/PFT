@@ -27,14 +27,14 @@ A full-stack, enterprise-grade **Personal Finance & Wealth Management Applicatio
 
 ## 🛠️ Tech Stack
 
-### **Frontend**
+### 💻 **Frontend**
 * **Framework**: React 18 + Vite
 * **Routing**: React Router DOM v6
 * **Data Visualization**: Chart.js + React-Chartjs-2
 * **Icons & UI**: Lucide-React & Modern CSS Glassmorphism
 * **Exporting**: jsPDF & HTML2Canvas
 
-### **Backend**
+### ⚙️ **Backend**
 * **Runtime**: Node.js & Express 5
 * **Database**: MongoDB & Mongoose ODM
 * **Authentication**: JSON Web Tokens (JWT) & bcryptjs (256-bit encryption)
@@ -114,7 +114,10 @@ EMAIL_USER=your_gmail_address@gmail.com
 EMAIL_PASS=your_16_digit_app_password
 ```
 
-> **Note**: Generate a 16-character App Password at [Google App Passwords](https://myaccount.google.com/apppasswords).
+> **Note**:
+> * Generate a secure JWT secret using: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`
+> * Generate a 16-character Gmail App Password at [Google App Passwords](https://myaccount.google.com/apppasswords) (requires 2-Step Verification enabled on your Google account).
+> * Never commit your actual `.env` file or paste real secrets into this `README.md`. Keep `.env` listed in `.gitignore`.
 
 ### 3️⃣ Run the Application
 Start both backend and frontend concurrently from the root directory:
@@ -123,15 +126,20 @@ Start both backend and frontend concurrently from the root directory:
 npm run dev
 ```
 
-* **Frontend**: `http://localhost:5173`
-* **Backend API**: `http://localhost:5000/api`
+* 🌐 **Frontend**: `http://localhost:5173`
+* ⚙️ **Backend API**: `http://localhost:5000/api`
 
 ---
 
 ## 📤 How to Push this Project to GitHub
 
-Follow these commands to initialize Git and push your repository:
+Before pushing, confirm your `.env` is ignored:
+```bash
+git check-ignore -v backend/.env
+```
+*(If this prints the file path, it's safely ignored and won't be pushed).*
 
+Then initialize and push:
 ```bash
 # 1. Initialize Git repository
 git init
@@ -155,4 +163,4 @@ git push -u origin main
 ---
 
 ## 📄 License
-This project is licensed under the ISC License.
+This project is licensed under the **ISC License**.
