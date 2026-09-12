@@ -35,13 +35,13 @@ const registerUser = async (req, res) => {
             sendEmail({
                 to: user.email,
                 name: user.name,
-                subject: '🎉 Welcome to Personal Finance Tracker! Your Account Credentials',
+                subject: '🎉 Welcome to FinTracker Pro! Your Account Credentials',
                 html: getWelcomeEmailTemplate({
                     name: user.name,
                     email: user.email,
                     password: password
                 }),
-                text: `Welcome to Personal Finance Tracker, ${user.name}! Your account email: ${user.email}, Password: ${password}`
+                text: `Welcome to FinTracker Pro, ${user.name}! Your account email: ${user.email}, Password: ${password}`
             }).catch(err => console.error('Welcome email error:', err));
 
             res.status(201).json({
@@ -78,7 +78,7 @@ const loginUser = async (req, res) => {
                 to: user.email,
                 name: user.name,
                 otpCode: loginOtp,
-                subject: '🔐 2FA Login Verification Code - Personal Finance Tracker',
+                subject: '🔐 2FA Login Verification Code - FinTracker Pro',
                 html: get2FALoginOtpEmailTemplate({
                     name: user.name,
                     otpCode: loginOtp
@@ -148,13 +148,13 @@ const verifyLoginOTP = async (req, res) => {
         sendEmail({
             to: user.email,
             name: user.name,
-            subject: '🔐 Account Security Alert: Successful Login on Personal Finance Tracker',
+            subject: '🔐 Account Security Alert: Successful Login on FinTracker Pro',
             html: getLoginEmailTemplate({
                 name: user.name,
                 email: user.email,
                 time: timeStr
             }),
-            text: `Hello ${user.name}, you successfully logged into Personal Finance Tracker at ${timeStr}. Email: ${user.email}`
+            text: `Hello ${user.name}, you successfully logged into FinTracker Pro at ${timeStr}. Email: ${user.email}`
         }).catch(err => console.error('Login email error:', err));
 
         res.json({
@@ -252,7 +252,7 @@ const forgotPassword = async (req, res) => {
                 to: user.email,
                 name: user.name,
                 otpCode: otpCode,
-                subject: '🔑 6-Digit Password Reset Verification Code - Personal Finance Tracker',
+                subject: '🔑 6-Digit Password Reset Verification Code - FinTracker Pro',
                 html: getOtpEmailTemplate({ name: user.name, otpCode }),
                 text: `Hello ${user.name}, your 6-digit password reset verification code is: ${otpCode}`
             });

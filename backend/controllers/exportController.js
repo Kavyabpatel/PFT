@@ -52,7 +52,7 @@ const exportExcel = async (req, res) => {
         const transactions = await Transaction.find({ userId: req.user._id }).sort({ date: -1 });
 
         const workbook = new ExcelJS.Workbook();
-        workbook.creator = 'Personal Finance Tracker';
+        workbook.creator = 'FinTracker Pro';
         workbook.created = new Date();
 
         const worksheet = workbook.addWorksheet('Financial Summary');

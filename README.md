@@ -1,4 +1,4 @@
-# 💰 Personal Finance Tracker (PFT)
+# 💰 FinTracker Pro
 
 [![MERN Stack](https://img.shields.io/badge/Stack-MERN-blue.svg)](https://mongodb.com)
 [![License: ISC](https://img.shields.io/badge/License-ISC-green.svg)](https://opensource.org/licenses/ISC)
@@ -148,7 +148,7 @@ git init
 git add .
 
 # 3. Commit your changes
-git commit -m "Initial commit: Complete Personal Finance Tracker with 2FA Email Login"
+git commit -m "Initial commit: Complete FinTracker Pro platform with 2FA Email Login"
 
 # 4. Set main branch name
 git branch -M main
