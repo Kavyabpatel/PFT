@@ -46,9 +46,9 @@ const Sidebar = () => {
             <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`} style={{ transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)' }}>
                 <div className="flex-between" style={{ marginBottom: '40px', padding: '0 10px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        <img src={logo} alt="PFT Tracker Logo" style={{ width: '40px', height: '40px', objectFit: 'contain' }} />
+                        <img src={logo} alt="FinTracker Pro Logo" style={{ width: '40px', height: '40px', objectFit: 'contain' }} />
                         <span style={{ fontSize: '20px', fontWeight: '800', tracking: '-0.5px' }} className="gradient-text">
-                            PFT Tracker
+                            FinTracker Pro
                         </span>
                     </div>
                 </div>
